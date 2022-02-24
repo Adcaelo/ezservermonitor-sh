@@ -417,6 +417,7 @@ function showAll()
     services
     hdd_temperatures
     system_temperatures
+    disk_usage
 }
  
 # Function : showVersion
