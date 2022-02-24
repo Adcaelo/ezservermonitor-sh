@@ -1,3 +1,5 @@
+Tweaked by Côme EDELINE
+
 [eZ Server Monitor](https://www.ezservermonitor.com) (eSM) is a script for monitoring Linux servers. It is available in [Bash](https://www.ezservermonitor.com/esm-sh/features) version and [Web](https://www.ezservermonitor.com/esm-web/features) application.
 
 # eZ Server Monitor `sh
