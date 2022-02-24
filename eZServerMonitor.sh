@@ -294,9 +294,9 @@ function disk_space()
     # HDD_DATA=`df -hl | sed "1 d" | grep -v "^Filesystem" | grep -v "^Sys. de fich." | sort | head -5 | sed s/^/"  "/`
  
     if [ ${DISK_SHOW_TMPFS} = true ] ; then
-        HDD_DATA=`df -hl | sed "1 d" | grep -iv "^Filesystem|Sys." | sort | head -5 | sed s/^/"  "/`
+        HDD_DATA=`df -hl | sed "1 d" | grep -iv "^Filesystem|Sys." | grep -iv "/snap/" | sort | head -5 | sed s/^/"  "/`
     else
-        HDD_DATA=`df -hl | sed "1 d" | grep -iv "^Filesystem|Sys." | grep -vE "^tmpfs|udev" | sort | head -5 | sed s/^/"  "/`
+        HDD_DATA=`df -hl | sed "1 d" | grep -iv "^Filesystem|Sys." | grep -iv "/snap/" | grep -vE "^tmpfs|udev" | sort | head -5 | sed s/^/"  "/`
     fi
  
     echo
