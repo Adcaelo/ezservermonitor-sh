@@ -53,7 +53,9 @@ THEME_TEXT=GREEN
 # Title color : WHITE_ON_GREY, WHITE_ON_RED, WHITE_ON_GREEN, WHITE_ON_BLUE, WHITE_ON_MAGENTA, WHITE_ON_CYAN, BLACK_ON_YELLOW
 THEME_TITLE=WHITE_ON_GREY
 
-DISK_USAGE=95
+DISK_FULL=95
+DISK_WARN=85
+DISK_OK=75
  
  
 # ********************************************************** #
@@ -306,12 +308,25 @@ function disk_space()
     echo -e "${!THEME_TEXT}$HDD_TOP"
     echo -e "${WHITE}$HDD_DATA"
 
+}
+
+# Function : Disk usage
+function disk_usage()
+{
     #Check / part
     size=$(df -kh | awk '$6 == "/" {print $5}')
     size=${size%"%"}
-    if (( size > $DISK_USAGE )); then
-        echo
-        echo -e "    ==> ${BOLD}${RED}WARNING${RESET}${RED} / more than $DISK_USAGE % full${RESET}  <==    "
+
+    echo
+    echo -e "${!THEME_TEXT}DISK USAGE"
+    if (( size > $DISK_FULL )); then
+        echo -e "    ==> ${BOLD}${RED}ALERT${RESET}${RED} / part is $size% full${RESET}  <==    "
+    elif (( size > $DISK_WARN )); then
+        echo -e "    ==> ${BOLD}${YELLOW}WARNING${RESET}${YELLOW} / part is $size% full${RESET}  <==    "
+    elif (( size > $DISK_OK )); then
+        echo -e "    ==> ${BOLD}${BLUE}OK${RESET}${BLUE} / part is $size% full${RESET}  <==    "
+    else
+        echo -e "    ==> ${BOLD}${GREEN}OK${RESET}${GREEN} / part is $size% full${RESET}  <==    "
     fi
 }
  
@@ -420,7 +435,7 @@ function showHelp()
   echo -e "$ESM_NAME is originally a PHP project allows you to display system's information of a Unix machine.\nThis is the bash version."
   echo
   echo -e "[USAGE]\n"
-  echo -e "  -h, -u, --help, --usage    print this help message \n"
+  echo -e "  -h, --help                 print this help message \n"
   echo -e "  -v, --version              print program version\n"
   echo -e "  -C, --clear                clear console\n                             Must be inserted before any argument\n"
   echo -e "  -s, --system               system information (OS and distro ; kernel ; hostname ; uptime ; users connected; last boot; datetime)\n"
@@ -432,6 +447,7 @@ function showHelp()
   echo -e "  -l, --load                 system load ; processus\n"
   echo -e "  -t, --temperatures         print CPU, system and HDD temperatures\n                             Can be configured in the file\n"
   echo -e "  -d, --disk                 disk space (top 5) ; sorted by alpha\n"
+  echo -e "  -u, --usage                warn about / part used space\n                             Can be configured in the file\n"
   echo -e "  -a, --all                  print all data\n"
   echo; echo;
   echo -e "More information on : $ESM_URL"
@@ -449,7 +465,7 @@ if [ $# -ge 1 ] ; then
     while getopts "Csenpcmltdavhu-:" option
     do
         case $option in
-            h | u) showHelp; exit ;;
+            h) showHelp; exit ;;
             v) showVersion; exit;;
             C) clear ;;
             s) system ;;
@@ -460,6 +476,7 @@ if [ $# -ge 1 ] ; then
             l) load_average ;;
             t) hdd_temperatures; system_temperatures ;;
             d) disk_space ;;
+            u) disk_usage ;;
             e) services ;;
             a) showAll ;;
             -) case $OPTARG in
