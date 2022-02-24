@@ -20,7 +20,7 @@
 # ************************************************************ #
  
 # Disk usage - Show or hide virtual mountpoints (tmpfs)
-DISK_SHOW_TMPFS=false
+DISK_SHOW_TMPFS=true
  
 # Service who returns WAN IP
 GET_WAN_IP="https://www.ezservermonitor.com/myip"
@@ -52,6 +52,8 @@ THEME_TEXT=GREEN
 
 # Title color : WHITE_ON_GREY, WHITE_ON_RED, WHITE_ON_GREEN, WHITE_ON_BLUE, WHITE_ON_MAGENTA, WHITE_ON_CYAN, BLACK_ON_YELLOW
 THEME_TITLE=WHITE_ON_GREY
+
+DISK_USAGE=95
  
  
 # ********************************************************** #
@@ -303,6 +305,14 @@ function disk_space()
     makeTitle "Disk space (top 5)"
     echo -e "${!THEME_TEXT}$HDD_TOP"
     echo -e "${WHITE}$HDD_DATA"
+
+    #Check / part
+    size=$(df -kh | awk '$6 == "/" {print $5}')
+    size=${size%"%"}
+    if (( size > $DISK_USAGE )); then
+        echo
+        echo -e "    ==> ${BOLD}${RED}WARNING${RESET}${RED} / more than $DISK_USAGE % full${RESET}  <==    "
+    fi
 }
  
 # Function : services
