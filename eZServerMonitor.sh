@@ -328,6 +328,44 @@ function disk_usage()
     else
         echo -e "    ==> ${BOLD}${GREEN}OK${RESET}${GREEN} / part is $size% full${RESET}  <==    "
     fi
+
+    #Check /home part
+    size=$(df -kh | awk '$6 == "/home" {print $5}')
+
+    if [ -n "$size" ]; then
+        size=${size%"%"}
+
+        echo
+        echo -e "${!THEME_TEXT}DISK USAGE"
+        if (( size > $DISK_FULL )); then
+            echo -e "    ==> ${BOLD}${RED}ALERT${RESET}${RED} /home part is $size% full${RESET}  <==    "
+        elif (( size > $DISK_WARN )); then
+            echo -e "    ==> ${BOLD}${YELLOW}WARNING${RESET}${YELLOW} /home part is $size% full${RESET}  <==    "
+        elif (( size > $DISK_OK )); then
+            echo -e "    ==> ${BOLD}${BLUE}OK${RESET}${BLUE} /home part is $size% full${RESET}  <==    "
+        else
+            echo -e "    ==> ${BOLD}${GREEN}OK${RESET}${GREEN} /home part is $size% full${RESET}  <==    "
+        fi
+    fi
+
+    #Check /mnt/mysql part
+    size=$(df -kh | awk '$6 == "/mnt/mysql" {print $5}')
+
+    if [ -n "$size" ]; then
+        size=${size%"%"}
+
+        echo
+        echo -e "${!THEME_TEXT}DISK USAGE"
+        if (( size > $DISK_FULL )); then
+            echo -e "    ==> ${BOLD}${RED}ALERT${RESET}${RED} /mnt/mysql part is $size% full${RESET}  <==    "
+        elif (( size > $DISK_WARN )); then
+            echo -e "    ==> ${BOLD}${YELLOW}WARNING${RESET}${YELLOW} /mnt/mysql part is $size% full${RESET}  <==    "
+        elif (( size > $DISK_OK )); then
+            echo -e "    ==> ${BOLD}${BLUE}OK${RESET}${BLUE} /mnt/mysql part is $size% full${RESET}  <==    "
+        else
+            echo -e "    ==> ${BOLD}${GREEN}OK${RESET}${GREEN} /mnt/mysql part is $size% full${RESET}  <==    "
+        fi
+    fi
 }
  
 # Function : services
