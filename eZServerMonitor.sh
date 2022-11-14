@@ -366,6 +366,26 @@ function disk_usage()
             echo -e "    ==> ${BOLD}${GREEN}OK${RESET}${GREEN} /mnt/mysql part is $size% full${RESET}  <==    "
         fi
     fi
+
+    #Check /var/lib/mysql
+    size=$(df -kh | awk '$6 == "/var/lib/mysql" {print $5}')
+
+    if [ -n "$size" ]; then
+        size=${size%"%"}
+
+        echo
+        echo -e "${!THEME_TEXT}DISK USAGE"
+        if (( size > $DISK_FULL )); then
+            echo -e "    ==> ${BOLD}${RED}ALERT${RESET}${RED} /var/lib/mysql part is $size% full${RESET}  <==    "
+        elif (( size > $DISK_WARN )); then
+            echo -e "    ==> ${BOLD}${YELLOW}WARNING${RESET}${YELLOW} /var/lib/mysql part is $size% full${RESET}  <==    "
+        elif (( size > $DISK_OK )); then
+            echo -e "    ==> ${BOLD}${BLUE}OK${RESET}${BLUE} /var/lib/mysql part is $size% full${RESET}  <==    "
+        else
+            echo -e "    ==> ${BOLD}${GREEN}OK${RESET}${GREEN} /var/lib/mysql part is $size% full${RESET}  <==    "
+        fi
+    fi
+
 }
  
 # Function : services
